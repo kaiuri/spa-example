@@ -1,5 +1,6 @@
 <script lang="ts">
   import Button from "./components/Button.svelte";
+  import ErrorPage from "./components/ErrorPage.svelte";
   import Progress from "./components/Progress.svelte";
   import View from "./components/View.svelte";
   import {type authenticate} from "./auth";
@@ -31,8 +32,8 @@
   <Progress />
 {:then items}
   <View title={stories[index].title} {items} />
-{:catch error}
-  <p>{error.message ?? "unknown error"}</p>
+{:catch e}
+  <ErrorPage message={e instanceof Error ? e.message : "unknown"} />
 {/await}
 <div class="flex flex-row justify-evenly">
   <Button onClick={logout}>logout</Button>
