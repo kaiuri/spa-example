@@ -1,9 +1,9 @@
 /// <reference lib="dom" />
 
+/** @module auth */
 // #region: Helpers
 
 // because the browser can't just keep rerunning things every time the page changes
-
 const once = <A extends ReadonlyArray<unknown>, R>(fn: (...args: A) => R) => {
   let value: R;
   return (...args: A) => {
@@ -91,13 +91,13 @@ const authorization = once((config: Configuration) =>
     (code_challenge) =>
       new URL(
         "https://accounts.spotify.com/authorize?" +
-          new URLSearchParams({
-            code_challenge,
-            code_challenge_method: "S256",
-            state: state(),
-            response_type: "code",
-            ...config,
-          })
+        new URLSearchParams({
+          code_challenge,
+          code_challenge_method: "S256",
+          state: state(),
+          response_type: "code",
+          ...config,
+        })
       )
   )
 );
@@ -132,6 +132,14 @@ const credentials = once(async (config: Configuration) => {
   return value as Credentials;
 });
 
+/** 
+ * This attempts to get the credentials from sessionStorage,
+ * if that fails, it will check for the necessary query parameters 
+ * for requesting an access token.
+ * If either those parameters are missing or the request fails,
+ * it will return a redirect URL towards the authorization page.
+ * In case of a failed access_token request, it will clear the sessionStorage before returning.
+ * */
 export const authenticate = async (config: Configuration) =>
   // if we got everything needed, or we've already did this we'll get the credentials
   credentials(config)
