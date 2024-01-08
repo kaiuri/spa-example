@@ -5,6 +5,10 @@
   import View from "./components/View.svelte";
   import {type authenticate} from "./auth";
   import {load} from "./app";
+  import {onMount} from "svelte";
+  onMount(() => {
+    window.history.pushState({}, "", "/app");
+  });
   export let credentials: Exclude<
     Awaited<ReturnType<typeof authenticate>>,
     URL
