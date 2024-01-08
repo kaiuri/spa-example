@@ -133,7 +133,7 @@ const credentials = once(async (config: Configuration) => {
 });
 
 export const authenticate = async (config: Configuration) =>
-  // if we got everything neeeded, or we've already did this we'll get the credentials
+  // if we got everything needed, or we've already did this we'll get the credentials
   credentials(config)
     .then((v) => v)
     // else it means we're missing something, so we'll redirect the user to the login page
