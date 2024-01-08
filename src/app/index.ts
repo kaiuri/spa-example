@@ -22,7 +22,7 @@ export function load({access_token}: {access_token: string}): readonly Story[] {
     {title: "taste", items: taste(client)},
     {title: "artists", items: artists(client)},
     {title: "tracks", items: tracks(client)},
-    {title: "Recommendations", items: recommendations(client)},
+    {title: "suggestions", items: recommendations(client)},
   ];
   return stories;
 }
