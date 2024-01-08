@@ -1,27 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {mean, toPairs} from "ramda";
-import type {AudioFeature, GET} from "../spotify";
+import {mean} from "ramda";
+import type {GET} from "../spotify";
+import {aggregate} from "./audio_features";
 import {formatName} from "./format";
-
-type Aggregated = {
-  [P in keyof AudioFeature]: Array<AudioFeature[P]>;
-};
-
-const assign = Object.assign;
-const create = Object.create;
-
-function aggregateFeatures(audio_features: AudioFeature[]): Aggregated {
-  return audio_features.reduce<Aggregated>((acc, curr) => {
-    toPairs(curr).forEach(([feature, value]) => {
-      if (feature in acc) {
-        assign(acc, {[feature]: [...acc[feature], value]});
-      } else {
-        assign(acc, {[feature]: [value]});
-      }
-    });
-    return acc;
-  }, create(null));
-}
 
 const panic = (msg: string) => (e: unknown | Error) => {
   if (e instanceof Error) throw e.message;
@@ -42,7 +23,7 @@ export async function generator(client: GET) {
         .catch(panic("/audio-features failed"))
         .then(({audio_features}) => audio_features)
     );
-  const aggregated = aggregateFeatures(audio_features);
+  const aggregated = aggregate(audio_features);
   const {tracks} = await client("/recommendations", {
     limit: "10",
     market: country,
