@@ -1,6 +1,7 @@
 <script lang="ts">
   export let message: string | undefined = undefined;
   let hidden = true;
+  export let withLogout = true;
   const logout = () => {
     sessionStorage.clear();
     window.location.href = "/login";
@@ -19,5 +20,7 @@
       </details>
     </button>
   </div>
-  <button class="btn" on:click={logout}>return</button>
+  {#if withLogout}
+    <button class="btn" on:click={logout}>return</button>
+  {/if}
 </div>

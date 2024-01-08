@@ -37,7 +37,10 @@
 {:then items}
   <View title={stories[index].title} {items} />
 {:catch e}
-  <ErrorPage message={e instanceof Error ? e.message : "unknown"} />
+  <ErrorPage
+    message={e instanceof Error ? e.message : "unknown"}
+    withLogout={false}
+  />
 {/await}
 <div class="flex flex-row justify-evenly">
   <Button onClick={logout}>logout</Button>
