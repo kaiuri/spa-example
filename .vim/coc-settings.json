@@ -1,0 +1,15 @@
+{
+  "eslint.enable": false,
+  "languageserver": {
+    "svelte": {
+      "command": "svelteserver",
+      "args": [ "--stdio" ],
+      "filetypes": [ "svelte" ],
+      "rootPatterns": [ "svelte.config.js" ],
+      "disableSnippetCompletion": true,
+      "initializationOptions": { },
+      "settings": { },
+      "progressOnInitialization": true
+    }
+  }
+}
