@@ -124,6 +124,7 @@ const credentials = once(async (config: Configuration) => {
     }),
   });
   if (!res.ok) {
+    sessionStorage.clear()
     throw res.statusText;
   }
   value = await res.json();
