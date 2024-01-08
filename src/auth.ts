@@ -91,13 +91,13 @@ const authorization = once((config: Configuration) =>
     (code_challenge) =>
       new URL(
         "https://accounts.spotify.com/authorize?" +
-        new URLSearchParams({
-          code_challenge,
-          code_challenge_method: "S256",
-          state: state(),
-          response_type: "code",
-          ...config,
-        })
+          new URLSearchParams({
+            code_challenge,
+            code_challenge_method: "S256",
+            state: state(),
+            response_type: "code",
+            ...config,
+          })
       )
   )
 );
@@ -124,7 +124,7 @@ const credentials = once(async (config: Configuration) => {
     }),
   });
   if (!res.ok) {
-    sessionStorage.clear()
+    sessionStorage.clear();
     throw res.statusText;
   }
   value = await res.json();
@@ -132,9 +132,9 @@ const credentials = once(async (config: Configuration) => {
   return value as Credentials;
 });
 
-/** 
+/**
  * This attempts to get the credentials from sessionStorage,
- * if that fails, it will check for the necessary query parameters 
+ * if that fails, it will check for the necessary query parameters
  * for requesting an access token.
  * If either those parameters are missing or the request fails,
  * it will return a redirect URL towards the authorization page.
