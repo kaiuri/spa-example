@@ -1,5 +1,10 @@
 <script lang="ts">
+  import {onMount} from "svelte";
+
   export let redirect: URL;
+  onMount(() => {
+    window.history.pushState({}, "", "/login");
+  });
 </script>
 
 <div class="box flex flex-col place-items-center items-start p-2">

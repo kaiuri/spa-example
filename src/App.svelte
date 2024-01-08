@@ -19,6 +19,8 @@
       index = value;
     };
   }
+  /** clear storage and redirects to `/` which will be `/login` since storage
+   * will be empty */
   function logout() {
     sessionStorage.clear();
     window.location.href = "/";
