@@ -1,7 +1,6 @@
-import {collectBy, map, pipe, prop} from "ramda";
-import type {AudioFeature, GET, Track} from "../spotify";
-import type {Merge} from "ts-toolbelt/out/Object/Merge";
 import type {Select} from "ts-toolbelt/out/Object/Select";
+import type {AudioFeature, GET} from "../spotify";
+import {aggregate} from "./audio_features";
 import {itemImage, itemTrack} from "./item";
 type Feature = keyof Select<AudioFeature, number>;
 
@@ -37,45 +36,36 @@ function humanValue(v: number, key: Feature) {
   }
 }
 
-async function createItem(
-  merged: Array<Merge<AudioFeature, Track>>,
-  key: Feature
-) {
-  const arr = merged.toSorted((a, b) => a[key] - b[key]);
-  const mean = arr.reduce((a, b) => a + b[key], 0) / arr.length;
-  return {
-    name: key,
-    context: humanValue(mean, key),
-    track: itemTrack(arr[10]),
-    image: itemImage(arr[10].album),
-  };
-}
-
+const LABELS: Array<Feature> = [
+  "valence",
+  "energy",
+  "loudness",
+  "key",
+  "tempo",
+];
 export async function generator(client: GET) {
-  const {items: tracks} = await client("/me/top/tracks", {limit: "20"});
+  const {items: tracks} = await client("/me/top/tracks", {limit: "50"});
   if (tracks.length === 0) throw new Error("No tracks found");
 
   const {audio_features} = await client("/audio-features", {
     ids: tracks.map((x) => x.id).join(","),
   });
 
-  const labels: Array<Feature> = [
-    "valence",
-    "energy",
-    "loudness",
-    "key",
-    "tempo",
-  ];
-  const merge = pipe(
-    (audio_features: AudioFeature[], tracks: Track[]) => {
-      return [...audio_features, ...tracks];
-    },
-    collectBy(prop("id")),
-    map((a): Merge<AudioFeature, Track> => {
-      return Object.assign({}, ...a);
+  const aggregated = aggregate(audio_features);
+  const LEN = audio_features.length;
+  const MID = Math.floor(LEN / 2);
+  return Promise.all(
+    LABELS.map(async (label) => {
+      const values = aggregated[label];
+      const mean = values.reduce((b, a) => b + a, 0) / LEN;
+      const id = aggregated.id.at(values.indexOf(values.toSorted().at(MID)!));
+      const track = tracks.find((x) => x.id === id)!;
+      return {
+        name: label,
+        context: humanValue(mean, label),
+        track: itemTrack(track),
+        image: itemImage(track.album),
+      };
     })
   );
-  const merged = merge(audio_features, tracks);
-  const gen = createItem.bind(null, merged);
-  return Promise.all(labels.map(gen));
 }
