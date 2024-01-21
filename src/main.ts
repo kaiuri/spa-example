@@ -11,11 +11,6 @@ function some<A, C extends null | undefined>(
   if (a) return a;
   else throw message;
 }
-const config = {
-  client_id: some(import.meta.env.VITE_CLIENT_ID, "missing client_id"),
-  redirect_uri: some(import.meta.env.VITE_REDIRECT_URI, "missing redirect_uri"),
-  scope: some(import.meta.env.VITE_SCOPE, "missing scope"),
-};
 export default new Main({
   target: document.getElementById("app")!,
   props: {
