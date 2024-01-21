@@ -3,7 +3,6 @@ import type {Select} from "ts-toolbelt/out/Object/Select";
 export type ReleaseDatePrecision = "day" | "year";
 export type Market = Type<string, "market">;
 type Href = Type<string, "href">;
-type ItemType<S extends string> = Type<string, S>;
 type Followers = {
   href: Href;
   total: number;
