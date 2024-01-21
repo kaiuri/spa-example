@@ -4,13 +4,6 @@ import Login from "./Login.svelte";
 import Main from "./Main.svelte";
 import {authenticate} from "./auth";
 
-function some<A, C extends null | undefined>(
-  a: A | C,
-  message = `${a} is nil`
-) {
-  if (a) return a;
-  else throw message;
-}
 export default new Main({
   target: document.getElementById("app")!,
   props: {
