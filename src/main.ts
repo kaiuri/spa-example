@@ -8,11 +8,8 @@ function some<A, C extends null | undefined>(
   a: A | C,
   message = `${a} is nil`
 ) {
-  if (!a) {
-    throw message;
-  } else {
-    return a as A;
-  }
+  if (a) return a;
+  else throw message;
 }
 const config = {
   client_id: some(import.meta.env.VITE_CLIENT_ID, "missing client_id"),
